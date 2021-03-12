@@ -1,0 +1,60 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+  <a class="navbar-brand" href="#">SSH-Tool</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor02">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+          {{selectedCategory === 'ALL' ? 'Show all Categories' : 'Show Category ' + selectedCategory }}
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" (click)="selectCategory('ALL')">Show all Categories</a>
+          <a class="dropdown-item" (click)="selectCategory(item.title)" *ngFor="let item of items">
+            Show Category {{ item.title }}
+          </a>
+        </div>
+      </li>
+    </ul>
+    <a class="btn btn-primary btn-md" (click)="addCategory()">Add Category</a>
+  </div>
+</nav>
+
+
+<div class="container" *ngFor="let item of items; let i = index">
+  <div class="row" *ngIf="checkVisibility(item)">
+    <div class="col-12">
+      <h3 class="title">
+        {{ item.title }}
+      
+        <div class="buttons">
+          <a class="btn btn-primary btn-sm" (click)="addItem(i)">Add item</a>
+          <a class="btn btn-success btn-sm" (click)="openCategory(item)">Open category</a>
+          <a class="btn btn-danger btn-sm" (click)="deleteCategory(i)">Delete</a>
+        </div>
+      </h3>
+    </div>
+
+    <div class="col-4" *ngFor="let subItem of item.items; let y = index">
+      <div class="card border-secondary mb-3">
+        <div class="card-header">
+          <b>Name:</b> {{ subItem.title }}
+
+          <button type="button" class="close" aria-label="Close" (click)="deleteItem(i, y)">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="card-body">
+          <p class="card-text"><b>Hostname:</b><br>{{subItem.username}}@{{ subItem.hostname }}</p>
+        
+          <a class="btn btn-sm btn-block" [ngClass]="{'btn-primary': !checkSelected(subItem), 'btn-success': checkSelected(subItem) }" (click)="openTerminal($event, subItem)">
+            {{ checkSelected(subItem) ? 'SELECTED' : 'OPEN' }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
