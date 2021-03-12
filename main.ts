@@ -1,4 +1,6 @@
 import { app, BrowserWindow, ipcMain, screen } from 'electron';
+import { autoUpdater } from 'electron-updater';
+import * as log from 'electron-log';
 import * as path from 'path';
 import * as url from 'url';
 import { exec } from 'child_process';
@@ -15,6 +17,7 @@ export class Main {
     this.serve = this.args.some(value => value === '--serve');
 
     this.initIPCMainListener();
+    this.initAutoUpdater();
   }
 
   createWindow() {
@@ -68,6 +71,25 @@ export class Main {
       });
       console.log(args);
     });
+  }
+
+  private initAutoUpdater() {
+    autoUpdater.on('checking-for-update', () => log.info('[Updater] Checking for update...'));
+
+    autoUpdater.on('update-available', (info) => log.info('[Updater] Update available.'));
+
+    autoUpdater.on('update-not-available', (info) => log.info('[Updater] Update not available.'));
+
+    autoUpdater.on('error', (error) => log.info('[Updater] Error in auto-updater: ' + error.toString()));
+
+    autoUpdater.on('download-progress', (progress) => log.info(`[Updater] Downloading... ${progress.percent}`));
+
+    autoUpdater.on('update-downloaded', (info) => {
+      log.info('[Updater] Update downloaded; will install now');
+      autoUpdater.quitAndInstall();
+    });
+
+    autoUpdater.checkForUpdatesAndNotify();
   }
 }
 
