@@ -203,7 +203,10 @@ export class AppComponent implements OnInit {
 
     category.items.forEach((item) => array.push(`${item.username}@${item.hostname}`));
 
-    this.electronService.ipcRenderer.send('open-terminals', array);
+    this.electronService.ipcRenderer.send('open-terminals', {
+      console: this.selectedConsole,
+      commands: array
+    });
   }
 
   openTerminal(event: any, item: CategoryItem) {
