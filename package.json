@@ -1,7 +1,7 @@
 {
   "name": "ssh-tool",
   "productName": "SSH-Tool",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Simple ssh terminal opener an manager",
   "homepage": "https://enneken-solutions.de",
   "repository": "git@github.com:ShortByte/SSH-Tool.git",
@@ -11,7 +11,7 @@
   },
   "keywords": [],
   "build": {
-    "appId": "twitchutils",
+    "appId": "ssh-tool",
     "asar": true,
     "directories": {
       "output": "out"
@@ -78,6 +78,7 @@
     "@types/jasminewd2": "2.0.8",
     "@types/mocha": "8.0.3",
     "@types/node": "12.12.6",
+    "@types/ping": "0.2.0",
     "@typescript-eslint/eslint-plugin": "4.2.0",
     "@typescript-eslint/eslint-plugin-tslint": "4.2.0",
     "@typescript-eslint/parser": "4.2.0",
@@ -112,10 +113,13 @@
     "node": ">=10.13.0"
   },
   "dependencies": {
+    "@sweetalert2/theme-dark": "4.0.3",
+    "animate.css": "4.1.1",
     "bootstrap": "4.6.0",
     "electron-log": "4.3.2",
     "electron-updater": "4.3.8",
     "jquery": "3.6.0",
+    "ping": "0.4.0",
     "popper.js": "1.16.1",
     "sweetalert2": "10.15.5"
   }

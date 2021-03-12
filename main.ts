@@ -4,11 +4,21 @@ import * as log from 'electron-log';
 import * as path from 'path';
 import * as url from 'url';
 import { exec } from 'child_process';
+import { sys } from 'ping';
+
+class Item {
+
+  title: string;
+  hostname: string;
+  username: string;
+  online_status: boolean;
+}
 
 export class Main {
 
   args: string[];
   serve: boolean;
+  items: Item[] = [];
 
   windows: BrowserWindow = undefined;
 
@@ -51,25 +61,86 @@ export class Main {
     }));
   
     this.windows.on('closed', () => this.windows = undefined);
+
+    setTimeout(() => {
+      this.checkWindowsTerminalIsInstalled();
+      this.initPingTask();
+    }, 1000);
+  }
+
+  private checkWindowsTerminalIsInstalled() {
+    exec('where wt', (error, stdout, stderr) => {
+      if(!(error)) return;
+    
+      this.windows.webContents.send('windows-terminal-not-found');
+    });
+  }
+
+  private initPingTask() {
+    setInterval(() => {
+      this.items.forEach((item) => {
+        sys.probe(item.hostname, (isAlive) => {
+          this.windows.webContents.send('status', {
+            hostname: item.hostname,
+            isAlive: isAlive
+          });
+        });
+      });
+    }, 1000 * 10);
   }
 
   private initIPCMainListener() {
+    ipcMain.on('items', (event, args) => {
+      this.items = args;
+    });
+
     ipcMain.on('open-terminal', (event, args) => {
-      exec(`wt new-tab -d "%cd%" -p "PowerShell" ssh ${args}`, (error, stdout, stderr) => {
-        if(error) console.log(error);
-      });
-      console.log(args);
+      const cmd = args.console;
+      const command = args.command;
+
+      if(cmd === 'Powershell' || cmd === 'Git Bash' ||  cmd === 'CMD') {
+        const program = (cmd === 'Powershell' ? 'powershell' : cmd === 'CMD' ? 'cmd' : 'bash');
+        const parameter = (cmd === 'Powershell' ? '-command' : cmd === 'CMD' ? '/k' : '-c');
+        
+        exec(`start ${program} ${parameter} "ssh ${command}"`, (error, stdout, stderr) => {
+          if(error) console.log(error);
+        });
+      }
+      if(cmd === 'Windows Terminal') {
+        exec(`wt new-tab -d "%cd%" -p "PowerShell" ssh ${command}`, (error, stdout, stderr) => {
+          if(error) console.log(error);
+        });
+      }
+      console.log(command);
     });
     
     ipcMain.on('open-terminals', (event, args) => {
-      const lines = [];
-    
-      args.forEach((item: string) => lines.push(`new-tab -d "%cd%" -p "PowerShell" ssh ${item}`));
-    
-      exec(`wt ${lines.join(';')}`, (error, stdout, stderr) => {
-        if(error) console.log(error);
-      });
-      console.log(args);
+      const cmd = args.console;
+      const commands = args.commands;
+
+
+      if(cmd === 'Powershell' || cmd === 'Git Bash' ||  cmd === 'CMD') {
+        const program = (cmd === 'Powershell' ? 'powershell' : cmd === 'CMD' ? 'cmd' : 'bash');
+        const parameter = (cmd === 'Powershell' ? '-command' : cmd === 'CMD' ? '/k' : '-c');
+
+        commands.forEach((command: string) => {
+          exec(`start ${program} ${parameter} "ssh ${command}"`, (error, stdout, stderr) => {
+            if(error) console.log(error);
+          });
+        });
+      }
+      
+      if(cmd === 'Windows Terminal') {
+        const lines = [];
+      
+        commands.forEach((item: string) => lines.push(`new-tab -d "%cd%" -p "PowerShell" ssh ${item}`));
+        
+        exec(`wt ${lines.join(';')}`, (error, stdout, stderr) => {
+          if(error) console.log(error);
+        });
+      }
+
+      console.log(commands);
     });
   }
 

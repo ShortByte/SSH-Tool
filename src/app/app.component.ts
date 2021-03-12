@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { ElectronService } from './core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { Category, CategoryItem } from './core/entities';
@@ -10,21 +10,78 @@ import Swal from 'sweetalert2';
 })
 export class AppComponent implements OnInit {
 
+  consoles = [
+    'Windows Terminal',
+    'Powershell',
+    'Git Bash',
+    'CMD'
+  ];
+
+  selectedConsole = undefined;
+
   items: Category[] = [];
 
   selectedItems: CategoryItem[] = [];
 
   selectedCategory: string = 'ALL';
 
-  constructor(private electronService: ElectronService, private translate: TranslateService) {
+  constructor(private electronService: ElectronService, private translate: TranslateService, private ngZone: NgZone) {
     this.translate.setDefaultLang('en');
   }
 
   ngOnInit(): void {
     const items = localStorage.getItem('items');
     
-    if(items)
+    if(items) {
       this.items = JSON.parse(items);
+
+      const array = [];
+    
+      this.items.forEach((category) => {
+        category.items.forEach(item => {
+          array.push(item);
+        });
+      });
+      this.electronService.ipcRenderer.send('items', array);
+    }
+
+    const cmd = localStorage.getItem('console');
+    this.selectedConsole = (cmd) ? cmd : this.consoles[0];
+
+    this.electronService.ipcRenderer.on('status', (event: any, data: any) => {
+      this.ngZone.run(() => {
+        this.items.forEach((category) => {
+          const item = category.items.find((x => x.hostname === data.hostname));
+          if(!(item)) return;
+          item.online_status = data.isAlive;
+        });
+      });
+    });
+
+    this.electronService.ipcRenderer.on('windows-terminal-not-found', () => {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1000 * 10,
+        timerProgressBar: true,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        },
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      });
+      
+      Toast.fire({
+        icon: 'warning',
+        title: 'Please install Windows Terminal!'
+      });
+    });
   }
 
   private save() {
@@ -32,6 +89,15 @@ export class AppComponent implements OnInit {
     this.items.forEach((item) => item.items.sort((a, b) => a.title.localeCompare(b.title)));
 
     localStorage.setItem('items', JSON.stringify(this.items));
+
+    const array = [];
+  
+    this.items.forEach((category) => {
+      category.items.forEach(item => {
+        array.push(item);
+      });
+    });
+    this.electronService.ipcRenderer.send('items', array);
   }
 
   private deletePrompt() {
@@ -39,6 +105,12 @@ export class AppComponent implements OnInit {
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
       icon: 'warning',
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp'
+      },
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
@@ -50,6 +122,12 @@ export class AppComponent implements OnInit {
     return Swal.fire({
       title: title,
       input: 'text',
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp'
+      },
       inputAttributes: {
         autocapitalize: 'off'
       },
@@ -92,13 +170,21 @@ export class AppComponent implements OnInit {
       input: 'text',
       confirmButtonText: 'Next &rarr;',
       showCancelButton: true,
-      progressSteps: ['1', '2', '3']
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp'
+      },
+      progressSteps: ['1', '2', '3'],
     }).queue([
       'Name of item?',
       'Hostname of item?',
       'Username of item?'
     ]).then((result: any) => {
-      this.items[category].items.push({ title: result.value[0], hostname: result.value[1], username: result.value[2] });
+      if(result.value[0] === '' || result.value[1] === '' || result.value[2] === '')
+        return;
+      this.items[category].items.push({ title: result.value[0], hostname: result.value[1], username: result.value[2], online_status: true });
       this.save();
     });
   }
@@ -136,9 +222,20 @@ export class AppComponent implements OnInit {
       array.push(`${item.username}@${item.hostname}`);
 
       this.selectedItems = [];
-      this.electronService.ipcRenderer.send('open-terminals', array);
+      this.electronService.ipcRenderer.send('open-terminals', {
+        console: this.selectedConsole,
+        commands: array
+      });
       return;
     }
-    this.electronService.ipcRenderer.send('open-terminal', `${item.username}@${item.hostname}`);
+    this.electronService.ipcRenderer.send('open-terminal', {
+      console: this.selectedConsole,
+      command: `${item.username}@${item.hostname}`
+    });
+  }
+
+  selectConsole(event: any) {
+    this.selectedConsole = event;
+    localStorage.setItem('console', event);
   }
 }

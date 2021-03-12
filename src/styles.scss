@@ -1,9 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import './assets/css/bootstrap.min.css';
-@import 'sweetalert2/src/sweetalert2.scss';
+//@import 'sweetalert2/src/sweetalert2.scss';
+@import '~@sweetalert2/theme-dark/dark.scss';
 
 $scrollbar: #383838;
+$cAlert: #d22c32;
 
 ::-webkit-scrollbar {
   width: 4px;
@@ -26,7 +28,7 @@ html, body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.title {
+h3.title {
   padding-bottom: 4px;
   margin-top: 24px;
   margin-bottom: 12px;
@@ -42,10 +44,63 @@ html, body {
   }
 }
 
+.has-failed {
+  animation: alertblink 2s ease-in-out infinite;
+  border-color: $cAlert !important;
+}
+
 .card, .card-header, .card-footer {
-  border-radius: unset !important;
+  border-radius: 8px;
 }
 
 .card-body {
-  padding: .5rem 1.25rem 1.25rem 1.25rem;
+  padding: .5rem 1.75rem;
+
+  .close {
+    position: absolute;
+    right: 3px;
+    top: 0px;
+  }
+
+  .card-text  {
+    margin-bottom: 1px;
+  }
+
+  .title {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .description {
+    float: right;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .btn {
+    margin-top: 8px;
+  }
+
+  .online {
+    color:rgba(0, 255, 42, 0.5);
+  }
+
+  .offline {
+    color:rgba($cAlert, 0.5);
+  }
+}
+
+.form-group {
+  margin-bottom: 0;
+  margin-right: 14px;
+}
+
+@keyframes alertblink {
+  0% {
+      background: rgba($cAlert, 0);
+  }
+  50% {
+      background: rgba($cAlert, 0.2);
+  }
+  100% {
+      background: rgba($cAlert, 0);
+  }
 }
