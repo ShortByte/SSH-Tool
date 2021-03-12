@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "description": "Simple ssh terminal opener an manager",
   "homepage": "https://enneken-solutions.de",
+  "repository": "git@github.com:ShortByte/SSH-Tool.git",
   "author": {
     "name": "Leon Enneken",
     "email": "kontakt@enneken-solutions.de"

@@ -1,15 +1,17 @@
-[![Angular Logo](https://www.vectorlogo.zone/logos/angular/angular-icon.svg)](https://angular.io/) [![Electron Logo](https://www.vectorlogo.zone/logos/electronjs/electronjs-icon.svg)](https://electronjs.org/)
+# SSH-Tool 
+[![Github All Releases](https://img.shields.io/github/downloads/ShortByte/SSH-Tool/total.svg?style=for-the-badge&logo=appveyor)]() [![Github Release Version](https://img.shields.io/github/v/release/ShortByte/SSH-Tool?style=for-the-badge&logo=appveyor)]()
+<a href="https://www.buymeacoffee.com/ShortByte" title="Donate to this project using Buy Me A Coffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?style=for-the-badge" alt="Buy Me A Coffee donate button" /></a>
 
-![Maintained][maintained-badge]
-[![Travis Build Status][build-badge]][build]
-[![Make a pull request][prs-badge]][prs]
-[![License](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE.md)
 
-[![Watch on GitHub][github-watch-badge]][github-watch]
-[![Star on GitHub][github-star-badge]][github-star]
-[![Tweet][twitter-badge]][twitter]
+<a href="https://twitter.com/ShortByteYT" title="My Twitter"><img src="https://img.shields.io/twitter/follow/ShortByteYT?style=for-the-badge" alt="My Twitter" /></a>
+<a href="https://twitch.tv/ShortByte" title="My Twitch"><img src="https://img.shields.io/twitch/status/ShortByte?style=for-the-badge" alt="My Twitch" /></a>
+<a href="https://discord.gg/Kc7m3Ug" title="My Discord Server"><img src="https://img.shields.io/discord/325738511363866626?label=Discord&style=for-the-badge" alt="My Discord Server" /></a>
 
 # Introduction
+
+This tool is a small program to open SSH connections in the Windows terminal with a single click.
+
+# Development
 
 Bootstrap and package your project with Angular 10 and Electron 9 (Typescript + SASS + Hot Reload) for creating Desktop applications.
 
@@ -18,12 +20,6 @@ Currently runs with:
 - Angular v10.0.14
 - Electron v9.3.0
 - Electron Builder v22.8.0
-
-With this sample, you can :
-
-- Run your app in a local development environment with Electron & Hot reload
-- Run your app in a production environment
-- Package your app into an executable file for Linux, Windows & Mac
 
 /!\ Hot reload only pertains to the renderer process. The main electron process is not able to be hot reloaded, only restarted.
 
@@ -34,7 +30,7 @@ With this sample, you can :
 Clone this repository locally :
 
 ``` bash
-git clone https://github.com/maximegris/angular-electron.git
+git clone https://github.com/ShortByte/SSH-Tool.git
 ```
 
 Install dependencies with npm :
@@ -98,26 +94,29 @@ E2E Test scripts can be found in `e2e` folder.
 Note: To make it work behind a proxy, you can add this proxy exception in your terminal  
 `export {no_proxy,NO_PROXY}="127.0.0.1,localhost"`
 
-## Branch & Packages version
+## 📷 Images
+![Dashboard](https://i.imgur.com/Qd3NdQv.png)
 
-- Angular 4 & Electron 1 : Branch [angular4](https://github.com/maximegris/angular-electron/tree/angular4)
-- Angular 5 & Electron 1 : Branch [angular5](https://github.com/maximegris/angular-electron/tree/angular5)
-- Angular 6 & Electron 3 : Branch [angular6](https://github.com/maximegris/angular-electron/tree/angular6)
-- Angular 7 & Electron 3 : Branch [angular7](https://github.com/maximegris/angular-electron/tree/angular7)
-- Angular 8 & Electron 7 : Branch [angular8](https://github.com/maximegris/angular-electron/tree/angular8)
-- Angular 9 & Electron 7 : Branch [angular9](https://github.com/maximegris/angular-electron/tree/angular9)
-- Angular 10 & Electron 9 : (master)
 
-[build-badge]: https://travis-ci.org/maximegris/angular-electron.svg?branch=master&style=style=flat-square
-[build]: https://travis-ci.org/maximegris/angular-electron
-[license-badge]: https://img.shields.io/badge/license-Apache2-blue.svg?style=style=flat-square
-[license]: https://github.com/maximegris/angular-electron/blob/master/LICENSE.md
-[prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
-[prs]: http://makeapullrequest.com
-[github-watch-badge]: https://img.shields.io/github/watchers/maximegris/angular-electron.svg?style=social
-[github-watch]: https://github.com/maximegris/angular-electron/watchers
-[github-star-badge]: https://img.shields.io/github/stars/maximegris/angular-electron.svg?style=social
-[github-star]: https://github.com/maximegris/angular-electron/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20angular-electron!%20https://github.com/maximegris/angular-electron%20%F0%9F%91%8D
-[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/maximegris/angular-electron.svg?style=social
-[maintained-badge]: https://img.shields.io/badge/maintained-yes-brightgreen
+## 👀 Download?
+You want to download it? Click [here](https://github.com/ShortByte/SSH-Tool/releases/latest) for the latest release!
+
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome.<br />
+Feel free to check [issues page](https://github.com/ShortByte/SSH-Tool/issues) if you want to contribute.<br />
+
+
+## 🙏 Support
+
+<p><a href="https://www.buymeacoffee.com/ShortByte"> <img  src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="ShortByte" /></a></p>
+
+## 📝 License
+
+Copyright © 2021 [Leon Enneken](https://github.com/ShortByte).<br />
+This project is GPL-2.0 licensed.
+
+---
+
+Developed with ❤️ by Enneken Solutions in Cologne!
