@@ -88,9 +88,20 @@ h3.title {
   }
 }
 
+.card-header {
+  .buttons {
+    margin-top: -4px;
+    margin-bottom: -4px;
+  }
+}
+
 .form-group {
   margin-bottom: 0;
   margin-right: 14px;
+}
+
+.form-settings {
+  margin-right: 0;
 }
 
 @keyframes alertblink {
@@ -103,4 +114,12 @@ h3.title {
   100% {
       background: rgba($cAlert, 0);
   }
+}
+
+.custom-file-label::after {
+  border-radius: 0;
+}
+
+.custom-file-label {
+  border-radius: 0;
 }

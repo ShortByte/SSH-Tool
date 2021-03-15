@@ -17,6 +17,16 @@ export class AppComponent implements OnInit {
     'CMD'
   ];
 
+  paths = {
+    ping: false,
+    winscp: {
+      enabled: false,
+      path: ''
+    }
+  };
+
+  showSettings: boolean = false;
+
   selectedConsole = undefined;
 
   items: Category[] = [];
@@ -30,6 +40,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const settings = localStorage.getItem('settings');
+
+    if(settings)
+      this.paths = JSON.parse(settings);
+
+    this.electronService.ipcRenderer.send('ping-enabled', this.paths.ping);
+
     const items = localStorage.getItem('items');
     
     if(items) {
@@ -209,6 +226,16 @@ export class AppComponent implements OnInit {
     });
   }
 
+  openWinSCP(item: CategoryItem) {
+    if(!(this.paths.winscp.enabled))
+      return;
+    this.electronService.ipcRenderer.send('open-winscp', {
+      path: this.paths.winscp.path,
+      username: item.username,
+      hostname: item.hostname
+    });
+  }
+
   openTerminal(event: any, item: CategoryItem) {
     if(event.ctrlKey) {
       if(this.selectedItems.includes(item))
@@ -240,5 +267,17 @@ export class AppComponent implements OnInit {
   selectConsole(event: any) {
     this.selectedConsole = event;
     localStorage.setItem('console', event);
+  }
+
+  pickFile(type: string, files: FileList) {
+    if(type === 'winscp') {
+      this.paths.winscp.path = files.item(0).path;
+    }
+  }
+
+  saveSettings() {
+    this.electronService.ipcRenderer.send('ping-enabled', this.paths.ping);
+
+    localStorage.setItem('settings', JSON.stringify(this.paths));
   }
 }

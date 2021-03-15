@@ -20,6 +20,8 @@ export class Main {
   serve: boolean;
   items: Item[] = [];
 
+  interval: NodeJS.Timeout;
+
   windows: BrowserWindow = undefined;
 
   constructor() {
@@ -64,7 +66,6 @@ export class Main {
 
     setTimeout(() => {
       this.checkWindowsTerminalIsInstalled();
-      this.initPingTask();
     }, 1000);
   }
 
@@ -77,7 +78,7 @@ export class Main {
   }
 
   private initPingTask() {
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.items.forEach((item) => {
         sys.probe(item.hostname, (isAlive) => {
           this.windows.webContents.send('status', {
@@ -92,6 +93,24 @@ export class Main {
   private initIPCMainListener() {
     ipcMain.on('items', (event, args) => {
       this.items = args;
+    });
+
+    ipcMain.on('ping-enabled', (event, args) => {
+      if(args) {
+        this.initPingTask();
+      } else {
+        clearInterval(this.interval);
+      }
+    });
+
+    ipcMain.on('open-winscp', (event, args) => {
+      const path = args.path;
+      const username = args.username;
+      const hostname = args.hostname;
+
+      exec(`start ${path} sftp://${username}@${hostname}`, (error, stdout, stderr) => {
+        if(error) console.log(error);
+      });
     });
 
     ipcMain.on('open-terminal', (event, args) => {
