@@ -97,17 +97,18 @@ export class Main {
     ipcMain.on('open-terminal', (event, args) => {
       const cmd = args.console;
       const command = args.command;
+      const port = (command.includes(':') ? command.split(':')[1] : 22);
 
       if(cmd === 'Powershell' || cmd === 'Git Bash' ||  cmd === 'CMD') {
         const program = (cmd === 'Powershell' ? 'powershell' : cmd === 'CMD' ? 'cmd' : 'bash');
         const parameter = (cmd === 'Powershell' ? '-command' : cmd === 'CMD' ? '/k' : '-c');
         
-        exec(`start ${program} ${parameter} "ssh ${command}"`, (error, stdout, stderr) => {
+        exec(`start ${program} ${parameter} "ssh ${command} -p ${port}"`, (error, stdout, stderr) => {
           if(error) console.log(error);
         });
       }
       if(cmd === 'Windows Terminal') {
-        exec(`wt new-tab -d "%cd%" -p "PowerShell" ssh ${command}`, (error, stdout, stderr) => {
+        exec(`wt new-tab -d "%cd%" -p "PowerShell" ssh ${command} -p ${port}`, (error, stdout, stderr) => {
           if(error) console.log(error);
         });
       }
@@ -124,7 +125,9 @@ export class Main {
         const parameter = (cmd === 'Powershell' ? '-command' : cmd === 'CMD' ? '/k' : '-c');
 
         commands.forEach((command: string) => {
-          exec(`start ${program} ${parameter} "ssh ${command}"`, (error, stdout, stderr) => {
+          const port = (command.includes(':') ? command.split(':')[1] : 22);
+
+          exec(`start ${program} ${parameter} "ssh ${command} -p ${port}"`, (error, stdout, stderr) => {
             if(error) console.log(error);
           });
         });
@@ -133,7 +136,10 @@ export class Main {
       if(cmd === 'Windows Terminal') {
         const lines = [];
       
-        commands.forEach((item: string) => lines.push(`new-tab -d "%cd%" -p "PowerShell" ssh ${item}`));
+        commands.forEach((command: string) => {
+          const port = (command.includes(':') ? command.split(':')[1] : 22);
+          lines.push(`new-tab -d "%cd%" -p "PowerShell" ssh ${command} -p ${port}`);
+        });
         
         exec(`wt ${lines.join(';')}`, (error, stdout, stderr) => {
           if(error) console.log(error);
