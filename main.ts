@@ -108,7 +108,7 @@ export class Main {
       const username = args.username;
       const hostname = args.hostname;
 
-      exec(`start ${path} sftp://${username}@${hostname}`, (error, stdout, stderr) => {
+      exec(`start "${path}" sftp://${username}@${hostname}`, (error, stdout, stderr) => {
         if(error) console.log(error);
       });
     });
