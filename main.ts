@@ -35,7 +35,7 @@ export class Main {
   createWindow() {
     const electronScreen = screen;
     const size = electronScreen.getPrimaryDisplay().workAreaSize;
-  
+
     this.windows = new BrowserWindow({
       x: 0, y: 0, width: size.width / 4 * 3, height: size.height / 4 * 3,
       webPreferences: {
@@ -45,23 +45,23 @@ export class Main {
         enableRemoteModule : true
       }
     });
-  
+
     this.windows.removeMenu();
-  
+
     if(this.serve) {
       this.windows.webContents.openDevTools();
-  
+
       require('electron-reload')(__dirname, {
         electron: require(`${__dirname}/node_modules/electron`)
       });
     }
 
-    this.windows.loadURL(this.serve ? 'http://localhost:4200' : url.format({ 
-      pathname: path.join(__dirname, 'dist/index.html'), 
-      protocol: 'file:', 
-      slashes: true 
+    this.windows.loadURL(this.serve ? 'http://localhost:4200' : url.format({
+      pathname: path.join(__dirname, 'dist/index.html'),
+      protocol: 'file:',
+      slashes: true
     }));
-  
+
     this.windows.on('closed', () => this.windows = undefined);
 
     setTimeout(() => {
@@ -72,7 +72,7 @@ export class Main {
   private checkWindowsTerminalIsInstalled() {
     exec('where wt', (error, stdout, stderr) => {
       if(!(error)) return;
-    
+
       this.windows.webContents.send('windows-terminal-not-found');
     });
   }
@@ -105,10 +105,11 @@ export class Main {
 
     ipcMain.on('open-winscp', (event, args) => {
       const path = args.path;
+      const keypath = args.keypath
       const username = args.username;
       const hostname = args.hostname;
 
-      exec(`start "${path}" sftp://${username}@${hostname}`, (error, stdout, stderr) => {
+      exec(`"${path}" sftp://${username}@${hostname} /privatekey="${keypath}"`, (error, stdout, stderr) => {
         if(error) console.log(error);
       });
     });
@@ -121,7 +122,7 @@ export class Main {
       if(cmd === 'Powershell' || cmd === 'Git Bash' ||  cmd === 'CMD') {
         const program = (cmd === 'Powershell' ? 'powershell' : cmd === 'CMD' ? 'cmd' : 'bash');
         const parameter = (cmd === 'Powershell' ? '-command' : cmd === 'CMD' ? '/k' : '-c');
-        
+
         exec(`start ${program} ${parameter} "ssh ${command} -p ${port}"`, (error, stdout, stderr) => {
           if(error) console.log(error);
         });
@@ -133,7 +134,7 @@ export class Main {
       }
       console.log(command);
     });
-    
+
     ipcMain.on('open-terminals', (event, args) => {
       const cmd = args.console;
       const commands = args.commands;
@@ -151,15 +152,15 @@ export class Main {
           });
         });
       }
-      
+
       if(cmd === 'Windows Terminal') {
         const lines = [];
-      
+
         commands.forEach((command: string) => {
           const port = (command.includes(':') ? command.split(':')[1] : 22);
           lines.push(`new-tab -d "%cd%" -p "PowerShell" ssh ${command} -p ${port}`);
         });
-        
+
         exec(`wt ${lines.join(';')}`, (error, stdout, stderr) => {
           if(error) console.log(error);
         });
@@ -201,7 +202,7 @@ try {
   });
 
   app.on('activate', () => {
-    if (main.windows === null) 
+    if (main.windows === null)
       main.createWindow();
   });
 

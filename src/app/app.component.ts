@@ -21,7 +21,8 @@ export class AppComponent implements OnInit {
     ping: false,
     winscp: {
       enabled: false,
-      path: ''
+      path: '',
+      keypath: ''
     }
   };
 
@@ -48,12 +49,12 @@ export class AppComponent implements OnInit {
     this.electronService.ipcRenderer.send('ping-enabled', this.paths.ping);
 
     const items = localStorage.getItem('items');
-    
+
     if(items) {
       this.items = JSON.parse(items);
 
       const array = [];
-    
+
       this.items.forEach((category) => {
         category.items.forEach(item => {
           array.push(item);
@@ -93,7 +94,7 @@ export class AppComponent implements OnInit {
           toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
       });
-      
+
       Toast.fire({
         icon: 'warning',
         title: 'Please install Windows Terminal!'
@@ -108,7 +109,7 @@ export class AppComponent implements OnInit {
     localStorage.setItem('items', JSON.stringify(this.items));
 
     const array = [];
-  
+
     this.items.forEach((category) => {
       category.items.forEach(item => {
         array.push(item);
@@ -231,6 +232,7 @@ export class AppComponent implements OnInit {
       return;
     this.electronService.ipcRenderer.send('open-winscp', {
       path: this.paths.winscp.path,
+      keypath: this.paths.winscp.keypath,
       username: item.username,
       hostname: item.hostname
     });
@@ -272,6 +274,9 @@ export class AppComponent implements OnInit {
   pickFile(type: string, files: FileList) {
     if(type === 'winscp') {
       this.paths.winscp.path = files.item(0).path;
+    }
+    if(type === 'keypath'){
+      this.paths.winscp.keypath = files.item(0).path;
     }
   }
 
