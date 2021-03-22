@@ -1,7 +1,7 @@
 {
   "name": "ssh-tool",
   "productName": "SSH-Tool",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Simple ssh terminal opener an manager",
   "homepage": "https://enneken-solutions.de",
   "repository": "git@github.com:ShortByte/SSH-Tool.git",
