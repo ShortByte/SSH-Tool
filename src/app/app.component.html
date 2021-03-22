@@ -28,7 +28,7 @@
         </a>
       </li>
     </ul>
-    
+
     <div class="form-group">
       <select class="custom-select" name="console" [(ngModel)]="selectedConsole" (change)="selectConsole($event.target.value)">
         <option *ngFor="let item of consoles" [value]="item">{{ item }}</option>
@@ -46,7 +46,7 @@
       <div class="col-12">
         <h3 class="title">
           {{ item.title }}
-        
+
           <div class="buttons">
             <a class="btn btn-primary btn-sm" (click)="addItem(i)">Add item</a>
             <a class="btn btn-success btn-sm" (click)="openCategory(item)">Open category</a>
@@ -54,14 +54,14 @@
           </div>
         </h3>
       </div>
-  
+
       <div class="col-4 server" *ngFor="let subItem of item.items; let y = index">
         <div class="card border-secondary mb-3" [ngClass]="{'has-failed': paths.ping && !subItem.online_status}">
           <div class="card-body">
             <button type="button" class="close" aria-label="Close" (click)="deleteItem(i, y)">
               <span aria-hidden="true">×</span>
             </button>
-  
+
             <p class="card-text">
               <span class="title">Name:</span>
               <span class="description">{{ subItem.title }}</span>
@@ -80,7 +80,7 @@
                 {{ subItem.online_status ? 'ONLINE' : 'OFFLINE' }}
               </span>
             </p>
-          
+
             <div class="row">
               <div class="col-4" *ngIf="paths.winscp.enabled">
                 <a class="btn btn-sm btn-block btn-warning" (click)="openWinSCP(subItem)">
@@ -97,7 +97,7 @@
         </div>
       </div>
     </div>
-  
+
   </div>
 </div>
 
@@ -107,19 +107,19 @@
       <div class="col-12">
         <h3 class="title">Settings</h3>
       </div>
-  
+
       <div class="col-6 mb-3">
         <div class="card">
           <div class="card-header">
             General settings
-  
+
             <div class="buttons">
               <a class="btn btn-sm btn-success" (click)="saveSettings()">Save</a>
             </div>
           </div>
           <div class="card-body">
             <div class="form-group form-settings mt-3">
-              
+
               <div class="form-group mb-3">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" class="custom-control-input" name="enablePing" id="enablePing" [(ngModel)]="paths.ping">
@@ -130,32 +130,41 @@
           </div>
         </div>
       </div>
-  
+
       <div class="col-6 mb-3">
         <div class="card">
           <div class="card-header">
             WinSCP settings
-  
+
             <div class="buttons">
               <a class="btn btn-sm btn-success" (click)="saveSettings()">Save</a>
             </div>
           </div>
-  
+
           <div class="card-body">
             <div class="form-group form-settings mt-3">
-              
+
               <div class="form-group mb-3">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" class="custom-control-input" name="enableWinscp" id="enableWinscp" [(ngModel)]="paths.winscp.enabled">
                   <label class="custom-control-label" for="enableWinscp">Enable winscp</label>
                 </div>
               </div>
-  
+
               <div class="input-group mb-3">
                 <div class="custom-file">
                   <input type="file" class="custom-file-input" id="winscpPath" (change)="pickFile('winscp', $event.target.files)">
                   <label class="custom-file-label" for="winscpPath">
                     {{ paths.winscp.path === '' ? 'Choose file' : paths.winscp.path }}
+                  </label>
+                </div>
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="keypath" (change)="pickFile('keypath', $event.target.files)">
+                  <label class="custom-file-label" for="keypath">
+                    {{ paths.winscp.keypath === '' ? 'Choose file' : paths.winscp.keypath }}
                   </label>
                 </div>
               </div>
