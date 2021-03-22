@@ -272,6 +272,7 @@ export class AppComponent implements OnInit {
   }
 
   pickFile(type: string, files: FileList) {
+    console.log(files)
     if(type === 'winscp') {
       this.paths.winscp.path = files.item(0).path;
     }
