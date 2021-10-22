@@ -52,8 +52,7 @@ npm install -g @angular/cli
 ## To build for development
 
 - **in a terminal window** -> npm start
-
-Voila! You can use your Angular + Electron app in a local development environment with hot reload !
+lorem
 
 The application code is managed by `main.ts`. In this sample, the app runs with a simple Angular App (http://localhost:4200) and an Electron window.
 The Angular component contains an example of Electron and NodeJS native lib import.
